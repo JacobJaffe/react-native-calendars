@@ -1,10 +1,17 @@
 import React, {Component} from 'react';
 import {Alert, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
-import {Agenda, DateData, AgendaEntry, AgendaSchedule} from 'react-native-calendars';
+import {Agenda, DateData, AgendaSchedule} from 'react-native-calendars';
 import testIDs from '../testIDs';
 
+// This is the type of the agenda item chosen for this data source.
+// This does not need to be the same for your implementation.
+type AgendaEntry = {
+  name: string;
+  height: number;
+  day: string;
+};
 interface State {
-  items?: AgendaSchedule;
+  items?: AgendaSchedule<AgendaEntry>;
 }
 
 export default class AgendaScreen extends Component<State> {
@@ -51,7 +58,7 @@ export default class AgendaScreen extends Component<State> {
 
         if (!items[strTime]) {
           items[strTime] = [];
-          
+
           const numItems = Math.floor(Math.random() * 3 + 1);
           for (let j = 0; j < numItems; j++) {
             items[strTime].push({
@@ -62,8 +69,8 @@ export default class AgendaScreen extends Component<State> {
           }
         }
       }
-      
-      const newItems: AgendaSchedule = {};
+
+      const newItems: AgendaSchedule<AgendaEntry> = {};
       Object.keys(items).forEach(key => {
         newItems[key] = items[key];
       });
@@ -71,7 +78,7 @@ export default class AgendaScreen extends Component<State> {
         items: newItems
       });
     }, 1000);
-  }
+  };
 
   renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
     const fontSize = isFirst ? 16 : 14;
@@ -86,7 +93,7 @@ export default class AgendaScreen extends Component<State> {
         <Text style={{fontSize, color}}>{reservation.name}</Text>
       </TouchableOpacity>
     );
-  }
+  };
 
   renderEmptyDate = () => {
     return (
@@ -94,11 +101,11 @@ export default class AgendaScreen extends Component<State> {
         <Text>This is empty date!</Text>
       </View>
     );
-  }
+  };
 
   rowHasChanged = (r1: AgendaEntry, r2: AgendaEntry) => {
     return r1.name !== r2.name;
-  }
+  };
 
   timeToString(time: number) {
     const date = new Date(time);
